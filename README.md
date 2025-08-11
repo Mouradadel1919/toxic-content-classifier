@@ -1,6 +1,6 @@
-# Multimodal Content Safety Pipeline
+# Content Safety Model
 
-A production-ready **multimodal content safety system** that detects and filters toxic or unsafe content across **text, images, and voice inputs**.  
+A production-ready **multimodal content safety system** that detects and filters toxic or unsafe content across **text, and images inputs**.  
 The system integrates **transformer-based NLP models**, **image captioning**, and layered safety checks for high-accuracy moderation.
 
 ---
@@ -15,17 +15,12 @@ The system integrates **transformer-based NLP models**, **image captioning**, an
   - Uses **BLIP (Bootstrapping Language-Image Pretraining)** to generate captions.
   - Captions are analyzed for safety using the fine-tuned DistilBERT model.
 
-- **Voice Safety**:  
-  - Transcribes audio to text via ASR (Automatic Speech Recognition).
-  - Processes the transcript with the text safety models.
-
 - **Layered Safety Verification**:  
   - **LLaMA Guard** as a **hard classifier** for strict filtering.  
   - Fine-tuned DistilBERT as a **soft classifier** for nuanced moderation.
 
 - **Deployment**:  
   - End-to-end pipeline deployed with **FastAPI** for real-time inference.
-  - Fully containerized and ready for production environments.
 
 ---
 
@@ -36,14 +31,11 @@ The system integrates **transformer-based NLP models**, **image captioning**, an
   - [LLaMA Guard](https://huggingface.co/meta-llama) for safety classification  
 
 - **Computer Vision**:  
-  - [BLIP](https://github.com/salesforce/BLIP) for image captioning
+  - [BLIP] for image captioning
 
-- **Speech Processing**:  
-  - Automatic Speech Recognition (ASR) for voice input transcription
 
 - **Deployment**:  
-  - [FastAPI](https://fastapi.tiangolo.com/) for serving the pipeline  
-  - [Docker](https://www.docker.com/) for containerization  
+  - [FastAPI] for serving the pipeline  
 
 ---
 
