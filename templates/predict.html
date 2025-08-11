@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>🖼️ Browse for the image</h3>
+
+<div>
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+        <label for="imageUpload" class="upload-label">
+            Upload image...
+        </label>
+        <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg">
+    </form>
+
+    <div class="image-section" style="display:none;">
+        <div class="img-preview">
+            <div id="imagePreview"></div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary btn-lg" id="btn-predict">Predict Image</button>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h3>📝 Or enter your own text</h3>
+<div>
+    <textarea id="userInput" rows="5" cols="60" placeholder="Type your text here..."></textarea><br>
+    <button type="button" class="btn btn-secondary btn-lg" id="btn-text-predict">Predict Text</button>
+</div>
+
+<div class="loader" style="display:none;"></div>
+
+<h3 id="caption">
+    <span></span>
+</h3>
+
+<h3 id="hard">
+    <span></span>
+</h3>
+
+<h3 id="soft">
+    <span></span>
+</h3>
+
+<script>
+    $(document).ready(function () {
+        // ========== Image prediction ==========
+        $('#imageUpload').change(function () {
+            $(".image-section").show();
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imagePreview').html('<img src="' + e.target.result + '" width="300"/>');
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
+
+        $('#btn-predict').click(function () {
+            var formData = new FormData();
+            var fileInput = $('#imageUpload')[0];
+            if (fileInput.files.length === 0) {
+                alert("Please upload an image first.");
+                return;
+            }
+
+            formData.append('file', fileInput.files[0]);
+
+            $(".loader").show();
+
+            $.ajax({
+                url: '/predict',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $(".loader").hide();
+                    $('#caption span').text("Caption: " + data.caption);
+                    $('#hard span').text("Hard Classifier: " + data.hard);
+                    $('#soft span').text("Soft Classifier: " + data.soft);
+                },
+                error: function () {
+                    $(".loader").hide();
+                    alert("Error while predicting image. Check backend logs.");
+                }
+            });
+        });
+
+        // ========== Text prediction ==========
+        $('#btn-text-predict').click(function () {
+            var inputText = $('#userInput').val().trim();
+            if (!inputText) {
+                alert("Please enter some text.");
+                return;
+            }
+
+            $(".loader").show();
+
+            $.ajax({
+                url: '/classify-text',
+                type: 'POST',
+                data: { user_input: inputText },
+                success: function (data) {
+                    $(".loader").hide();
+                    $('#caption span').text("Caption: (from user input)");
+                    $('#hard span').text("Hard Classifier: " + data.hard);
+                    $('#soft span').text("Soft Classifier: " + data.soft);
+                },
+                error: function () {
+                    $(".loader").hide();
+                    alert("Error while predicting text. Check backend logs.");
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

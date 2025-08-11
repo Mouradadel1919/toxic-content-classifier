@@ -1,0 +1,12 @@
+transformers==4.44.0
+matplotlib==3.9.2
+accelerate>=0.20.1
+datasets==2.21.0
+nlpaug==1.1.10
+tensorflow==2.12.0
+torch
+torchvision
+pyngrok
+uvicorn
+fastapi
+python-multipart
